@@ -11,6 +11,10 @@ from  dataclasses import dataclass
 from src.components.data_transformation import DataTransformation
 from src.components.data_transformation import DataTransformationConfig
 
+from src.components.model_trainer import ModelTrainerConfig
+from src.components.model_trainer import ModelTrainer
+
+
 @dataclass
 class DataIngestionConfig:
     train_data_path: str=os.path.join('artifacts',"train.csv")
@@ -27,11 +31,12 @@ class DataIngestion:
             logging.info('Read Dataset as DataFrame')
             df=pd.read_csv('notebook\data\stud.csv')
             
-
             os.makedirs(os.path.dirname(self.ingestion_config.train_data_path),exist_ok=True)
             df.to_csv(self.ingestion_config.raw_data_path,index=False,header=True)
 
             logging.info("Train Test Split initiated")
+
+            # Splitting the raw data set into Train & Test data set.
             train_set,test_set=train_test_split(df,test_size=0.2,random_state=42)
             train_set.to_csv(self.ingestion_config.train_data_path,index=False,header=True)
             test_set.to_csv(self.ingestion_config.test_data_path,index=False,header=True)
@@ -51,7 +56,12 @@ if __name__=="__main__":
         train_data_path,test_data_path=obj.initiate_data_ingetion()
         print(train_data_path)
         data_transformtion=DataTransformation()
-        data_transformtion.initiate_data_transformation(train_data_path,test_data_path)
+
+        train_arr,test_arr = data_transformtion.initiate_data_transformation(train_data_path,test_data_path)
+
+        model_trainer=ModelTrainer()
+        print(f"R2 Score={0}" , model_trainer.initiate_model_trainer(train_arr,test_arr))
+        
     except Exception as e:
         raise CustomException(e,sys)
      

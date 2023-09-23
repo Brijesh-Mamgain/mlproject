@@ -27,7 +27,9 @@ class DataTransformation:
         This function is responsible for Data Transformation
         '''
         try:
+            # Define the Numerical Columns
             numerical_columns=["writing_score","reading_score"]
+            # Define the Categorical Column
             categorical_coumns=[
                 "gender",
                 "race_ethnicity",
@@ -36,6 +38,7 @@ class DataTransformation:
                 "test_preparation_course",
             ]
 
+            #Setup the numerical pipeline steps
             num_pipeline= Pipeline(
                 steps=[
                     ("imputer",SimpleImputer(strategy="median")),
@@ -43,6 +46,8 @@ class DataTransformation:
                     
                 ]
             )
+
+            #Setup the Csategorical pipeline steps
             cat_pipeline= Pipeline(
                 steps=[
                     ("imputer", SimpleImputer(strategy="most_frequent")),
@@ -53,6 +58,7 @@ class DataTransformation:
             logging.info(f"Numerical Columns : {numerical_columns}")
             logging.info(f"Categorical Columns :{categorical_coumns}")
 
+            # Pass the pipeline and columns as parameter to column transformer.
             preprocessor=ColumnTransformer(
                 [
                 ("num_pipeline",num_pipeline,numerical_columns),
@@ -72,6 +78,7 @@ class DataTransformation:
             logging.info("Read Train & Test Data Completed")
             logging.info("obtaining the preprocessing object")
 
+            # Call the get_data_transformation_object method and get the preprocessor object (Column Tranformer)
             preprocessing_object= self.get_data_transformation_object()
             target_column_name="math_score"
             numerical_column=["writing_score","reading_score"]
@@ -99,7 +106,7 @@ class DataTransformation:
             return(
                 train_arr,
                 test_arr,
-                self.data_transformation_config.preprocessor_obj_file_path,
+                #self.data_transformation_config.preprocessor_obj_file_path,
             )
 
         except Exception as e:
