@@ -61,6 +61,7 @@ if __name__=="__main__":
 
         model_trainer=ModelTrainer()
         print(f"R2 Score={0}" , model_trainer.initiate_model_trainer(train_arr,test_arr))
+        ##print(model_trainer.initiate_model_trainer(train_arr,test_arr))
         
     except Exception as e:
         raise CustomException(e,sys)
